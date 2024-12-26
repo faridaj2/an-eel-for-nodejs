@@ -1,22 +1,23 @@
 import express from 'express'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import { execSync } from 'child_process'
 
 const app = express()
 const server = createServer(app)
 const io = new Server(server);
 
-let PORT = 8000
-
-export const setPort = port => {
-    if (typeof port !== 'number' || port <= 0 || port > 65535) {
-        console.error("Error: Port harus berupa angka antara 1 dan 65535.");
-        return;
-    }
-    PORT = port
+let config = {
+    PORT: 8000,
+    timeOut: 500,
+    dev: true
 }
 
+
+app.use('/js', express.static('dev'))
+
 app.use(express.static('web'))
+
 
 const _eel = {
     io,
@@ -35,6 +36,15 @@ const _eel = {
                 if (!fn) return io.emit('fn', { name: 'log', params: `Tidak ada fungsi : "${name}"` })
                 fn.fc(...Object.values(arg))
             });
+            socket.on('disconnect', (reason) => {
+                if (config.dev) {
+                    setTimeout(() => {
+                        server.close(() => {
+                            console.log('Server telah ditutup.');
+                        });
+                    }, config.timeOut)
+                }
+            });
         });
     }
 }
@@ -52,14 +62,20 @@ export const eel = new Proxy(_eel, {
     }
 })
 
-eel.init()
 
-export const startServer = () => {
-    if (PORT === null) {
-        console.error("Error: Port belum diatur menggunakan setPort().");
-        return;
-    }
-    server.listen(PORT, () => {
-        console.log(`Running on : http://localhost:${PORT}`);
+export const startServer = (cfg) => {
+    if (cfg) config = cfg
+    server.listen(config.PORT, () => {
+        console.clear()
+        if (config.dev) {
+            try {
+                const output = execSync(`start msedge --app=http://localhost:${config.PORT}`).toString()
+            } catch (error) {
+                console.error(`Terjadi kesalahan: ${error}`);
+            }
+        }
+        console.log(`Running on : http://localhost:${config.PORT}`);
     });
 };
+
+eel.init()

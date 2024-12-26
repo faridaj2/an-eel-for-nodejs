@@ -5,14 +5,14 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "child_process": "^1.0.2",
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
   },
   "name": "eel_nodejs",
   "version": "1.0.0",
   "description": "an eel packages for node js",
-  "main": "index.js",
-  "devDependencies": {},
+  "main": "eel.js",
   "keywords": [
     "eel",
     "node",

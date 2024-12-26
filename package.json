@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "npx nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "name": "eel_nodejs",
+  "version": "1.0.0",
+  "description": "an eel packages for node js",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [
+    "eel",
+    "node",
+    "js",
+    "app",
+    "develpoment"
+  ],
+  "author": "Farid Anjali",
+  "license": "ISC"
+}
